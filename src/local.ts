@@ -1,6 +1,10 @@
-import app from './index.js';
-import { serve } from '@hono/node-server';
+import { serve } from "@hono/node-server";
+import { getConfig } from "./config.js";
+import app from "./index.js";
 
-console.log('Starting server...');
+const config = getConfig();
 
-serve(app);
+serve({
+	...app,
+	port: config.PORT,
+});

@@ -9,3 +9,7 @@ public/
 .env
 .env.build
 .vercel
+google-project-.json
+service-account.json
+token.json
+.vercel

@@ -1,17 +1,27 @@
 {
-  "name": "hono",
-  "type": "module",
-  "dependencies": {
-    "@hono/node-server": "^1.12.0",
-    "hono": "^4.8.9"
-  },
-  "devDependencies": {
-    "@types/node": "^20.11.17",
-    "tsx": "^4.20.4",
-    "typescript": "^5.8.3"
-  },
-  "scripts": {
-    "dev": "tsx watch --env-file .env src/local.ts",
-    "dev:only": "tsx --env-file .env src/local.ts"
-  }
+	"name": "hono",
+	"type": "module",
+	"dependencies": {
+		"@google-cloud/local-auth": "^3.0.1",
+		"@hono/node-server": "^1.12.0",
+		"dotenv": "^17.2.1",
+		"google-auth-library": "^10.2.1",
+		"googleapis": "^156.0.0",
+		"hono": "^4.8.9",
+		"zod": "^4.0.17"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.2.2",
+		"@types/node": "^20.11.17",
+		"tsx": "^4.20.4",
+		"typescript": "^5.8.3"
+	},
+	"scripts": {
+		"dev": "tsx watch --env-file .env src/local.ts",
+		"dev:only": "tsx --env-file .env src/local.ts",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format .",
+		"format:fix": "biome format --write ."
+	}
 }
