@@ -4,10 +4,8 @@ const envSchema = z.object({
 	WEBHOOK_SECRET_PATH: z.string(),
 	SPREADSHEET_ID: z.string(),
 	PORT: z.coerce.number().default(3000),
-	GOOGLE_CLIENT_ID: z.string().optional(),
-	GOOGLE_CLIENT_SECRET: z.string().optional(),
-	GOOGLE_REDIRECT_URI: z.string().optional(),
-	GOOGLE_SERVICE_ACCOUNT_KEY: z.string().optional(),
+	ICOUNT_SECRET: z.string(),
+	GOOGLE_SERVICE_ACCOUNT_KEY: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;

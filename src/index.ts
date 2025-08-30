@@ -10,6 +10,7 @@ const app = new Hono();
 const config = getConfig();
 const WEBHOOK_SECRET_PATH = config.WEBHOOK_SECRET_PATH;
 const GOOGLE_SERVICE_ACCOUNT_KEY = config.GOOGLE_SERVICE_ACCOUNT_KEY;
+const ICOUNT_SECRET = config.ICOUNT_SECRET;
 
 if (!WEBHOOK_SECRET_PATH) {
 	throw new Error("WEBHOOK_SECRET_PATH environment variable is not set.");
@@ -24,16 +25,22 @@ app.get("/", (c) => {
 	return c.text(welcomeStrings.join("\n\n"));
 });
 
-app.post(`/${WEBHOOK_SECRET_PATH}`, async (c) => {
-	const body = await c.req.json<{
-		name: string;
-		age: number;
-	}>();
-	console.log("Webhook received:", body);
+app.post(
+	`/${WEBHOOK_SECRET_PATH}`,
+	async (c, next) => {
+		const secret = c.req.header("X-iCount-Secret");
+		if (!secret || secret !== ICOUNT_SECRET) {
+			return c.json({ message: "Unauthorized" }, 401);
+		}
+		await next();
+	},
+	async (c) => {
+		const body = await c.req.json<{
+			name: string;
+			age: number;
+		}>();
+		console.log("Webhook received:", body);
 
-	// Example of how to call updateGoogleSheet within the webhook handler
-	// You'll need to determine the spreadsheetId, range, and values based on your webhook payload
-	if (GOOGLE_SERVICE_ACCOUNT_KEY) {
 		try {
 			const spreadsheetId = config.SPREADSHEET_ID; // Replace with actual spreadsheet ID
 			const range = "Sheet1!A2"; // Replace with actual range
@@ -48,9 +55,9 @@ app.post(`/${WEBHOOK_SECRET_PATH}`, async (c) => {
 		} catch (error) {
 			console.error("Failed to update Google Sheet via webhook:", error);
 		}
-	}
 
-	return c.json({ message: "Webhook received successfully!" });
-});
+		return c.json({ message: "Webhook received successfully!" });
+	},
+);
 
 export default app;
